@@ -7,6 +7,8 @@ EasyHash generate GetHashCode function with performance close to classic impleme
 because it doesn't use reflection. Don't use EasyHash if performance is your primary goal because
 there is a slight decrease of performance and if not then it will prevent you from making mistakes.
 
+![Benchmark](https://raw.githubusercontent.com/iarovyi/EasyHash/master/docs/img/benchmark.PNG "Benchmark")
+
 Code like this:
 ```
 public sealed class HashedManually
