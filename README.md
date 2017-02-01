@@ -85,7 +85,7 @@ public sealed class HashedWithComplexRegistration
 				.Skip(f => f.Number)
 				.For(f => f.Numbers, (ob, hash) => ob.Numbers.OrderBy(x=>x).Aggregate(hash, (i, i1) => (i * 23) ^ i1.GetHashCode()))
 				.For(f => f.Text, (ob, hash) => (hash * 23) ^ ob.Text.GetHashCode())
-				.ExcludeCoolectionItems());
+				.ExcludeCollectionItems());
 	}
 
 	public override int GetHashCode() => EasyHash<HashedWithComplexRegistration>.GetHashCode(this);

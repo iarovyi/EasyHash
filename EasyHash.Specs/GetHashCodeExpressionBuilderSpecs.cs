@@ -85,7 +85,7 @@
             var item = new Mock<Foo>();
             var foo = new Foo() { Foos = new[] { item.Object, item.Object } };
             Func<Foo, int> hashFn = new GetHashCodeExpressionBuilder<Foo>()
-                .ExcludeCoolectionItems()
+                .ExcludeCollectionItems()
                 .Build()
                 .Compile();
 

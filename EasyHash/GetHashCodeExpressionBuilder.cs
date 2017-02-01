@@ -18,7 +18,7 @@
         private readonly int _colPrime2 = 486190561;
         private int _prime1 = unchecked((int)2166136261);
         private int _prime2 = RandomProvider.GetPrime(); //Force users to not depend on generated hashcode
-        private bool _includeCoolectionItems = true;
+        private bool _includeCollectionItems = true;
 
         internal GetHashCodeExpressionBuilder() { }
 
@@ -43,9 +43,9 @@
             return this;
         }
 
-        public GetHashCodeExpressionBuilder<T> ExcludeCoolectionItems()
+        public GetHashCodeExpressionBuilder<T> ExcludeCollectionItems()
         {
-            _includeCoolectionItems = false;
+            _includeCollectionItems = false;
             return this;
         }
 
@@ -69,7 +69,7 @@
                 {
                     expressions.Add(BuildItemCustomHashing(_memberHashers[member.Name], sourceParam, hashVariable));
                 }
-                else if (enumerableType != null && _includeCoolectionItems)
+                else if (enumerableType != null && _includeCollectionItems)
                 {
                     BuildCollectionHashing(expressions, variables, memberExpr, hashVariable, enumerableType, _prime2);
                 }
