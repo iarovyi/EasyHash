@@ -124,6 +124,7 @@
         {
             return Expression.Assign(
                     hashVariable,
+                    //TODO: inline custom expression and rebind parameters with visitor
                     Expression.Invoke(customHasher, sourceParam, hashVariable)
                 );
         }

@@ -46,6 +46,7 @@
             }
         }
 
+        //TODO: autogenerate Equals as well
         public static bool Equals(T obj, object other)
         {
             if (ReferenceEquals(null, other)) return false;
