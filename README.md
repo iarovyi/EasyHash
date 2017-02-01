@@ -28,7 +28,7 @@ public sealed class HashedManually
             var col1Hash = 486187739;
             if (col1 != null){
                 for(var item in col1) {
-                    col1Hash = col1Hash * 486190561 ^ (field8 == null ? 0 : field8.GetHashCode());
+                    col1Hash = col1Hash * 486190561 ^ (item == null ? 0 : item.GetHashCode());
                 }
             }
             hash = hash * 16780669 ^ col1Hash;
