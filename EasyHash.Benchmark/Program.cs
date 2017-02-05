@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using System.Threading;
     using FizzWare.NBuilder;
     using static System.Console;
     using static Helpers.ConsoleHelper;
@@ -41,16 +42,30 @@
 
         private static long Benchmark(object target, int times = Times)
         {
-            var sw = new Stopwatch();
-            target.GetHashCode();
-            sw.Start();
+            InitBenchmark();
 
+            //Warm up processor cache
+            for (int i = 0; i < times; i++)
+            {
+                target.GetHashCode();
+            }
+
+            var sw = Stopwatch.StartNew();
             for (int i = 0; i < times; i++)
             {
                 target.GetHashCode();
             }
 
             return sw.ElapsedMilliseconds;
+        }
+
+        private static void InitBenchmark()
+        {
+            Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
+            Thread.CurrentThread.Priority = ThreadPriority.Highest;
+            //Force thread to be executed on core #1 as result preventing thread to jump between cores.
+            Process.GetCurrentProcess().ProcessorAffinity = new IntPtr(1);
+            GC.Collect();
         }
     }
 }
