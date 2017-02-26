@@ -46,6 +46,12 @@
             VerifyFix(LanguageNames.CSharp, GetCSharpDiagnosticAnalyzer(), GetCSharpCodeFixProvider(), oldSource, newSource, codeFixIndex, allowNewCompilerDiagnostics);
         }
 
+        protected void VerifyCSharpFix(string oldSource, string newSource, DiagnosticResult expectedDiagnostic, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
+        {
+            VerifyCSharpDiagnostic(oldSource, expectedDiagnostic);
+            VerifyFix(LanguageNames.CSharp, GetCSharpDiagnosticAnalyzer(), GetCSharpCodeFixProvider(), oldSource, newSource, codeFixIndex, allowNewCompilerDiagnostics);
+        }
+
         /// <summary>
         /// Called to test a VB codefix when applied on the inputted string as a source
         /// </summary>

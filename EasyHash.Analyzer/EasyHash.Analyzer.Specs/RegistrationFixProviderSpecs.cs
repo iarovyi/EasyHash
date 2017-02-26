@@ -30,16 +30,7 @@ namespace EasyHash.Benchmark
     }
 }";
 
-            var expected = new DiagnosticResult
-            {
-                Id = RegistrationAnalyzer.DiagnosticId,
-                Message = string.Format(Resources.AnalyzerMessageFormat, "SomeType"),
-                Severity = DiagnosticSeverity.Error,
-                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 13, 13) }
-            };
-            VerifyCSharpDiagnostic(test, expected);
-
-            var fixedCode = @"
+            var expectedResult = @"
 namespace EasyHash.Benchmark
 {
     using EasyHash;
@@ -57,7 +48,15 @@ namespace EasyHash.Benchmark
         }
     }
 }";
-            VerifyCSharpFix(test, fixedCode);
+            var expectedDiagnostic = new DiagnosticResult
+            {
+                Id = RegistrationAnalyzer.DiagnosticId,
+                Message = string.Format(Resources.AnalyzerMessageFormat, "SomeType"),
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 13, 13) }
+            };
+
+            VerifyCSharpFix(test, expectedResult, expectedDiagnostic);
         }
 
         [Fact]
@@ -79,16 +78,7 @@ namespace EasyHash.Benchmark
     }
 }";
 
-            var expected = new DiagnosticResult
-            {
-                Id = RegistrationAnalyzer.DiagnosticId,
-                Message = string.Format(Resources.AnalyzerMessageFormat, "SomeType"),
-                Severity = DiagnosticSeverity.Error,
-                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 10, 13) }
-            };
-            VerifyCSharpDiagnostic(test, expected);
-
-            var fixedCode = @"
+            var expectedResult = @"
 namespace EasyHash.Benchmark
 {
     using EasyHash;
@@ -106,7 +96,15 @@ namespace EasyHash.Benchmark
         }
     }
 }";
-            VerifyCSharpFix(test, fixedCode);
+            var expectedDiagnostic = new DiagnosticResult
+            {
+                Id = RegistrationAnalyzer.DiagnosticId,
+                Message = string.Format(Resources.AnalyzerMessageFormat, "SomeType"),
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 10, 13) }
+            };
+
+            VerifyCSharpFix(test, expectedResult, expectedDiagnostic);
         }
 
         protected override CodeFixProvider GetCSharpCodeFixProvider() => new RegistrationCodeFixProvider();
