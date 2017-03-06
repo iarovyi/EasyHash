@@ -9,7 +9,8 @@ string relativeSlnPath = "./src/EasyHash.sln";
 Task("Clean")
     .Does(() =>
 {
-	Information("Build directory is " + buildDir);
+    #break
+    Information("Build directory is " + buildDir);
     CleanDirectory(buildDir);
 });
 
