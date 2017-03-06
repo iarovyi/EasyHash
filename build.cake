@@ -1,4 +1,5 @@
 #tool "nuget:?package=xunit.runner.console"
+#tool "nuget:?package=GitVersion.CommandLine"
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
@@ -21,8 +22,17 @@ Task("Restore-NuGet-Packages")
     NuGetRestore(relativeSlnPath);
 });
 
+Task("UpdateAssemblyInfo")
+    .Does(() =>
+{
+    GitVersion(new GitVersionSettings {
+        UpdateAssemblyInfo = true
+    });
+});
+
 Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
+    .IsDependentOn("UpdateAssemblyInfo")
     .Does(() =>
 {
     if(IsRunningOnWindows())
@@ -42,7 +52,6 @@ Task("Run-Unit-Tests")
     var testAssemblies = GetFiles("./src/**/bin/Release/*.Specs.dll");
     XUnit2(testAssemblies);
 });
-
 
 Task("Default")
     .IsDependentOn("Run-Unit-Tests");
