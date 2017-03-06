@@ -38,16 +38,8 @@ Task("Run-Unit-Tests")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    //TODO: run tests
-    //var testAssemblies = GetFiles("./src/**/bin/Release/*.Tests.dll");
-    //XUnit2(testAssemblies);
-
-
-    //http://cakebuild.net/dsl/xunit-v2/
-	//XUnit2(ICakeContext, IEnumerable<FilePath>)
-    //NUnit3("./src/**/bin/" + configuration + "/*.Tests.dll", new NUnit3Settings {
-      //  NoResults = true
-      //  });
+    var testAssemblies = GetFiles("./src/**/bin/Release/*.Specs.dll");
+    XUnit2(testAssemblies);
 });
 
 
