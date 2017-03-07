@@ -1,6 +1,8 @@
 #tool "nuget:?package=xunit.runner.console"
 #tool "nuget:?package=GitVersion.CommandLine"
 
+using Cake.Common.Tools.GitVersion;
+
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 string buildDir = Directory("./src/EasyHash/bin") + Directory(configuration);
@@ -25,9 +27,8 @@ Task("Restore-NuGet-Packages")
 Task("UpdateAssemblyInfo")
     .Does(() =>
 {
-    GitVersion(new GitVersionSettings {
-        UpdateAssemblyInfo = true
-    });
+    GitVersion version = GitVersion(new GitVersionSettings { UpdateAssemblyInfo = true });
+    Information("AssemblySemVer is " + version.AssemblySemVer);
 });
 
 Task("Build")
