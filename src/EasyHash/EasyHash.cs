@@ -1,5 +1,6 @@
 ﻿namespace EasyHash
 {
+    using JetBrains.Annotations;
     using System;
     using System.Threading;
 
@@ -27,7 +28,7 @@
             }
         }
 
-        public static void Register(Action<GetHashCodeExpressionBuilder<T>> configure)
+        public static void Register([NotNull]Action<GetHashCodeExpressionBuilder<T>> configure)
         {
             try
             {

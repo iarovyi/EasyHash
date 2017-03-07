@@ -1,13 +1,16 @@
 #tool "nuget:?package=xunit.runner.console"
 #tool "nuget:?package=GitVersion.CommandLine"
+#tool "nuget:?package=ILRepack"
 
 using Cake.Common.Tools.GitVersion;
+using IoPath = System.IO.Path;
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 string buildDir = Directory("./src/EasyHash/bin") + Directory(configuration);
+string outputDir = Directory("./output");
 string relativeSlnPath = "./src/EasyHash.sln";
-
+string primaryDllName = "EasyHash.dll";
 
 Task("Clean")
     .Does(() =>
@@ -54,8 +57,19 @@ Task("Run-Unit-Tests")
     XUnit2(testAssemblies);
 });
 
+Task("MergeLibraries")
+    .IsDependentOn("Run-Unit-Tests")
+    .Does(() =>
+{
+    var assemblyPaths = GetFiles(buildDir + "/*.dll");
+    string outputFile = IoPath.Combine(outputDir, primaryDllName);
+    string primaryAssembly = IoPath.Combine(buildDir, primaryDllName);
+
+    ILRepack(outputFile, primaryAssembly, assemblyPaths);
+});
+
 Task("Default")
-    .IsDependentOn("Run-Unit-Tests");
+    .IsDependentOn("MergeLibraries");
 
 
 RunTarget(target);
