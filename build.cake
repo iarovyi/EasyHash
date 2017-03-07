@@ -11,6 +11,7 @@ string buildDir = Directory("./src/EasyHash/bin") + Directory(configuration);
 string outputDir = Directory("./output");
 string relativeSlnPath = "./src/EasyHash.sln";
 string primaryDllName = "EasyHash.dll";
+string nugetDir = "./nuget";
 
 Task("Clean")
     .Does(() =>
@@ -18,6 +19,8 @@ Task("Clean")
     #break
     Information("Build directory is " + buildDir);
     CleanDirectory(buildDir);
+    CleanDirectory(outputDir);
+    CleanDirectory(nugetDir);
 });
 
 Task("Restore-NuGet-Packages")
@@ -31,7 +34,7 @@ Task("UpdateAssemblyInfo")
     .Does(() =>
 {
     GitVersion version = GitVersion(new GitVersionSettings { UpdateAssemblyInfo = true });
-    Information("AssemblySemVer is " + version.AssemblySemVer);
+    PrintGitVersion(version);
 });
 
 Task("Build")
@@ -66,10 +69,45 @@ Task("MergeLibraries")
     string primaryAssembly = IoPath.Combine(buildDir, primaryDllName);
 
     ILRepack(outputFile, primaryAssembly, assemblyPaths);
+    Information("Build directory is " + buildDir);
+});
+
+Task("Create-Nuget-Package")
+    .IsDependentOn("MergeLibraries")
+    .Does(() =>
+{
+     GitVersion version = GitVersion(new GitVersionSettings());
+     var nuGetPackSettings   = new NuGetPackSettings {
+                                Version                 = version.AssemblySemVer,
+                                NoPackageAnalysis       = true,
+                                Files                   = new [] {
+                                                                    new NuSpecContent {Source = @"./output/EasyHash.dll"},
+                                                                 },
+                                BasePath                = ".",
+                                OutputDirectory         = nugetDir
+                            };
+
+     var nuspecFiles = GetFiles("./**/EasyHash.nuspec");
+     Information("Generating nuget with version " + nuGetPackSettings.Version);
+     NuGetPack(nuspecFiles, nuGetPackSettings);
 });
 
 Task("Default")
-    .IsDependentOn("MergeLibraries");
+    .IsDependentOn("Create-Nuget-Package");
 
 
 RunTarget(target);
+
+private void PrintGitVersion(GitVersion version) {
+    Information("--------------- GitVersion Info ---------------- ");
+    Information("AssemblySemVer is       " + version.AssemblySemVer);
+    Information("FullSemVer is           " + version.FullSemVer);
+    Information("InformationalVersion is " + version.InformationalVersion);
+    Information("LegacySemVer is         " + version.LegacySemVer);
+    Information("Major is                " + version.Major);
+    Information("MajorMinorPatch is      " + version.MajorMinorPatch);
+    Information("Minor is                " + version.Minor);
+    Information("Patch is                " + version.Patch);
+    Information("SemVer is               " + version.SemVer);
+    Information("------------------------------------------------ ");
+}

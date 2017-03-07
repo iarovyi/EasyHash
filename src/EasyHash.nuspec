@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+ <package>
+   <metadata>
+	 <id>EasyHash</id>
+	 <version>0.0.0.0</version>
+	 <title>EasyHash</title>
+	 <authors>Sergii Iarovyi</authors>
+	 <owners>Sergii Iarovyi</owners>
+	 <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>
+	 <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
+	 <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
+	 <requireLicenseAcceptance>false</requireLicenseAcceptance>
+	 <description>Easy way to autogenerate GetHashCode function</description>
+	 <releaseNotes>First version</releaseNotes>
+	 <copyright>Copyright 2017</copyright>
+	 <tags>HashCode</tags>
+	 <!--Files will be injected in build script<files/>-->
+   </metadata>
+ </package>

@@ -250,3 +250,18 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+#Cake Bild
+# Build related
+tools/Cake/
+tools/NUnit.Runners/
+tools/NUnit.Console/
+tools/NUnit.ConsoleRunner/
+tools/GitVersion.CommandLine/
+tools/xunit.runner.console/
+tools/nuget.exe
+tools/packages.config.md5sum
+
+#Build script related
+nuget/
+output/
