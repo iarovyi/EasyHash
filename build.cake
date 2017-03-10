@@ -103,7 +103,7 @@ Task("Push-Nuget-Package")
     Information("Publishing nuget package " + package);
     NuGetPush(package, new NuGetPushSettings {
         Source = "https://api.nuget.org/v3/index.json",
-        ApiKey = ""
+        ApiKey = GetEnvironmentVariable("NugetApiKey")
     });
 });
 

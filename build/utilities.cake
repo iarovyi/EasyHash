@@ -13,3 +13,11 @@ private void PrintGitVersion(GitVersion version) {
     Information("SemVer is               " + version.SemVer);
     Information("------------------------------------------------ ");
 }
+
+private string GetEnvironmentVariable(string variableName) {
+    string val = EnvironmentVariable(variableName);
+    if (val == null) {
+        throw new Exception("Environment has no " + variableName + " variable");
+    }
+    return val;
+}
