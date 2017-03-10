@@ -1,6 +1,7 @@
 #tool "nuget:?package=xunit.runner.console"
 #tool "nuget:?package=GitVersion.CommandLine"
 #tool "nuget:?package=ILRepack"
+#load "build/utilities.cake"
 
 using Cake.Common.Tools.GitVersion;
 using IoPath = System.IO.Path;
@@ -30,7 +31,7 @@ Task("Restore-NuGet-Packages")
     NuGetRestore(relativeSlnPath);
 });
 
-Task("UpdateAssemblyInfo")
+Task("Update-Assembly-Info")
     .Does(() =>
 {
     GitVersion version = GitVersion(new GitVersionSettings { UpdateAssemblyInfo = true });
@@ -38,8 +39,7 @@ Task("UpdateAssemblyInfo")
 });
 
 Task("Build")
-    .IsDependentOn("Restore-NuGet-Packages")
-    .IsDependentOn("UpdateAssemblyInfo")
+    .IsDependentOn("Update-Assembly-Info")
     .Does(() =>
 {
     if(IsRunningOnWindows())
@@ -60,11 +60,11 @@ Task("Run-Unit-Tests")
     XUnit2(testAssemblies);
 });
 
-Task("MergeLibraries")
+Task("Merge-Libraries")
     .IsDependentOn("Run-Unit-Tests")
     .Does(() =>
 {
-    var assemblyPaths = GetFiles(buildDir + "/*.dll");
+    FilePathCollection assemblyPaths = GetFiles(buildDir + "/*.dll");
     string outputFile = IoPath.Combine(outputDir, primaryDllName);
     string primaryAssembly = IoPath.Combine(buildDir, primaryDllName);
 
@@ -73,7 +73,7 @@ Task("MergeLibraries")
 });
 
 Task("Create-Nuget-Package")
-    .IsDependentOn("MergeLibraries")
+    .IsDependentOn("Merge-Libraries")
     .Does(() =>
 {
      GitVersion version = GitVersion(new GitVersionSettings());
@@ -87,27 +87,26 @@ Task("Create-Nuget-Package")
                                 OutputDirectory         = nugetDir
                             };
 
-     var nuspecFiles = GetFiles("./**/EasyHash.nuspec");
+     FilePathCollection nuspecFiles = GetFiles("./**/EasyHash.nuspec");
      Information("Generating nuget with version " + nuGetPackSettings.Version);
      NuGetPack(nuspecFiles, nuGetPackSettings);
 });
 
-Task("Default")
-    .IsDependentOn("Create-Nuget-Package");
+Task("Push-Nuget-Package")
+    .IsDependentOn("Create-Nuget-Package")
+    .Does(() =>
+{
+    string semVersion = GitVersion(new GitVersionSettings()).SemVer;
+    ConvertableFilePath package = Directory(nugetDir) + File("EasyHash." + semVersion + ".nupkg");
 
+    Information("Publishing nuget package " + package);
+    NuGetPush(package, new NuGetPushSettings {
+        Source = "https://api.nuget.org/v3/index.json",
+        ApiKey = ""
+    });
+});
 
+Task("Default").IsDependentOn("Run-Unit-Tests");
+Task("Package").IsDependentOn("Create-Nuget-Package");
+Task("Publish").IsDependentOn("Push-Nuget-Package");
 RunTarget(target);
-
-private void PrintGitVersion(GitVersion version) {
-    Information("--------------- GitVersion Info ---------------- ");
-    Information("AssemblySemVer is       " + version.AssemblySemVer);
-    Information("FullSemVer is           " + version.FullSemVer);
-    Information("InformationalVersion is " + version.InformationalVersion);
-    Information("LegacySemVer is         " + version.LegacySemVer);
-    Information("Major is                " + version.Major);
-    Information("MajorMinorPatch is      " + version.MajorMinorPatch);
-    Information("Minor is                " + version.Minor);
-    Information("Patch is                " + version.Patch);
-    Information("SemVer is               " + version.SemVer);
-    Information("------------------------------------------------ ");
-}
