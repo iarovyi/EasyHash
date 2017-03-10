@@ -40,6 +40,7 @@ Task("Update-Assembly-Info")
 
 Task("Build")
     .IsDependentOn("Update-Assembly-Info")
+    .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
 {
     if(IsRunningOnWindows())
