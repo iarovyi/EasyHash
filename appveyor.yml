@@ -1,0 +1,15 @@
+version: 1.0.{build}
+environment:
+  NugetApiKey:
+    secure: 4wRBfc9TzFXOqAMiAnMt/3CYYtIpWQX28oY5OmLAHdeOw3GxSuuq4zkzkQBs6nX3
+build_script:
+- ps: ./build.ps1 -target Package
+artifacts:
+- path: ./nuget/*.nupkg
+- path: ./output/*
+deploy:
+- provider: NuGet
+  api_key:
+    secure: 4wRBfc9TzFXOqAMiAnMt/3CYYtIpWQX28oY5OmLAHdeOw3GxSuuq4zkzkQBs6nX3
+  on:
+    appveyor_repo_tag: true
