@@ -82,7 +82,7 @@ Task("Create-Nuget-Package")
                                 Version                 = version.AssemblySemVer,
                                 NoPackageAnalysis       = true,
                                 Files                   = new [] {
-                                                                    new NuSpecContent {Source = @"./output/EasyHash.dll"},
+                                                                    new NuSpecContent {Source = @"./output/EasyHash.dll", Target = "lib/net45" },
                                                                  },
                                 BasePath                = ".",
                                 OutputDirectory         = nugetDir
