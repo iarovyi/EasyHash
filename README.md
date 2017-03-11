@@ -97,3 +97,26 @@ public sealed class HashedWithComplexRegistration
 	public override bool Equals(object obj) => EasyHash<HashedWithComplexRegistration>.Equals(this, obj);
 }
 ```
+
+
+### Build Script
+
+#### From a powershell prompt
+
+Command     | Description
+:-----------| :----------
+`build.ps1` | Builds the entire solution and run tests.
+
+#### From a bash prompt
+
+Command                | Description
+:----------------------| :----------
+`build.bat` | Builds the entire solution. Run this first.
+
+#### Build targets
+
+Target            | Description
+:-----------------| :----------
+`Build`           | Build solution with semantic version and run tests.
+`Package`         | Create nuget package based on semantic version.
+`Publish   `      | Publish nuget package to nuget.org. (require ApiKey present as environment variable)
