@@ -111,7 +111,7 @@ Command     | Description
 
 Command                | Description
 :----------------------| :----------
-`build.bat` | Builds the entire solution. Run this first.
+`build.bat` | Builds the entire solution and run tests.
 
 #### Build targets
 
@@ -120,3 +120,9 @@ Target            | Description
 `Build`           | Build solution with semantic version and run tests.
 `Package`         | Create nuget package based on semantic version.
 `Publish   `      | Publish nuget package to nuget.org. (require ApiKey present as environment variable)
+
+Example:  `.\build.ps1 -target Package`
+
+### Contributors
+
+Please read [CONTRIBUTING.md](https://github.com/iarovyi/EasyHash/blob/master/CONTRIBUTING.md)
