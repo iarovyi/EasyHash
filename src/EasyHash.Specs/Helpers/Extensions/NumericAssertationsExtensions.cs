@@ -1,4 +1,6 @@
-﻿namespace EasyHash.Specs.Helpers.Extensions
+﻿using EasyHash.Expressions;
+
+namespace EasyHash.Specs.Helpers.Extensions
 {
     using System;
     using FluentAssertions;

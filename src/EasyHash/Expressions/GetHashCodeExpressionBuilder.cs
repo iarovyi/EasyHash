@@ -1,4 +1,4 @@
-﻿namespace EasyHash
+﻿namespace EasyHash.Expressions
 {
     using System;
     using System.Collections.Generic;
@@ -6,48 +6,18 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Helpers;
     using Helpers.Extensions;
 
     [DebuggerDisplay(nameof(DebugView))]
-    public sealed class GetHashCodeExpressionBuilder<T>
+    internal sealed class GetHashCodeExpressionBuilder<T>
     {
-        private readonly HashSet<string> _skippedMembers = new HashSet<string>();
-        private readonly Dictionary<string, Expression<Func<T, int, int>>> _memberHashers = new Dictionary<string, Expression<Func<T, int, int>>>();
-        private readonly int _colPrime1 = 486187739;
-        private readonly int _colPrime2 = 486190561;
-        private int _prime1 = unchecked((int)2166136261);
-        private int _prime2 = RandomProvider.GetPrime(); //Force users to not depend on generated hashcode
-        private bool _includeCollectionItems = true;
-
-        internal GetHashCodeExpressionBuilder() { }
+        private readonly GetHashCodeConfiguration<T> _configuration;
+        public GetHashCodeExpressionBuilder(GetHashCodeConfiguration<T> configuration = null)
+        {
+            _configuration = configuration ?? GetHashCodeConfiguration<T>.Default;
+        }
 
         internal string DebugView => Build().GetDebugView();
-
-        public GetHashCodeExpressionBuilder<T> WithPrimes(int prime1, int prime2)
-        {
-            _prime1 = prime1;
-            _prime2 = prime2;
-            return this;
-        }
-
-        public GetHashCodeExpressionBuilder<T> Skip(Expression<Func<T, object>> member)
-        {
-            _skippedMembers.Add(member.GetMemberName());
-            return this;
-        }
-
-        public GetHashCodeExpressionBuilder<T> For(Expression<Func<T, object>> member, Expression<Func<T, int, int>> hashMember)
-        {
-            _memberHashers.Add(member.GetMemberName(), hashMember);
-            return this;
-        }
-
-        public GetHashCodeExpressionBuilder<T> ExcludeCollectionItems()
-        {
-            _includeCollectionItems = false;
-            return this;
-        }
 
         internal Expression<Func<T, int>> Build()
         {
@@ -57,7 +27,7 @@
             var variables = new List<ParameterExpression>() { hashVariable };
             var expressions = new List<Expression>(members.Length + 2)
             {
-                Expression.Assign(hashVariable, Expression.Constant(_prime1, typeof (int)))
+                Expression.Assign(hashVariable, Expression.Constant(_configuration.Prime1, typeof (int)))
             };
 
             foreach (MemberInfo member in members)
@@ -65,17 +35,17 @@
                 MemberExpression memberExpr = Expression.PropertyOrField(sourceParam, member.Name);
                 Type enumerableType = typeof(string) == memberExpr.Type ? null : memberExpr.Type.GetEnumerableType();
 
-                if (_memberHashers.ContainsKey(member.Name))
+                if (_configuration.MemberHashers.ContainsKey(member.Name))
                 {
-                    expressions.Add(BuildItemCustomHashing(_memberHashers[member.Name], sourceParam, hashVariable));
+                    expressions.Add(BuildItemCustomHashing(_configuration.MemberHashers[member.Name], sourceParam, hashVariable));
                 }
-                else if (enumerableType != null && _includeCollectionItems)
+                else if (enumerableType != null && _configuration.IncludeCollectionItems)
                 {
-                    BuildCollectionHashing(expressions, variables, memberExpr, hashVariable, enumerableType, _prime2);
+                    BuildCollectionHashing(expressions, variables, memberExpr, hashVariable, enumerableType, _configuration.Prime2);
                 }
                 else
                 {
-                    expressions.Add(BuildItemHashing(memberExpr, memberExpr.Type, hashVariable, _prime2));
+                    expressions.Add(BuildItemHashing(memberExpr, memberExpr.Type, hashVariable, _configuration.Prime2));
                 }
             }
 
@@ -94,7 +64,7 @@
             var currentItem = Expression.Parameter(itemType);
             variables.Add(colhashVar);
 
-            expressions.Add(Expression.Assign(colhashVar, Expression.Constant(_colPrime1, typeof(int))));
+            expressions.Add(Expression.Assign(colhashVar, Expression.Constant(_configuration.ColPrime1, typeof(int))));
 
             expressions.Add(Expression.IfThen(
                                 Expression.NotEqual(
@@ -102,7 +72,7 @@
                                         Expression.Default(collMember.Type)
                                     ),
                                 collMember.ForEach(currentItem,
-                                    BuildItemHashing(currentItem, itemType, colhashVar, _colPrime2)
+                                    BuildItemHashing(currentItem, itemType, colhashVar, _configuration.ColPrime2)
                                 )
                             ));
 
@@ -164,7 +134,7 @@
                 .Where(p => p.CanRead);
 
             return fields.Union(properties)
-                .Where(m => !_skippedMembers.Contains(m.Name))
+                .Where(m => !_configuration.SkippedMembers.Contains(m.Name))
                 .ToArray();
         }
     }

@@ -43,17 +43,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MSIL\FastEasyHash.cs" />
     <Compile Include="EasyHash.cs" />
-    <Compile Include="GetHashCodeExpressionBuilder.cs" />
+    <Compile Include="Expressions\GetHashCodeExpressionBuilder.cs" />
+    <Compile Include="GetHashCodeConfiguration.cs" />
+    <Compile Include="Helpers\ProcessRunner.cs" />
+    <Compile Include="MSIL\DynamicAssemblyGetHashCodeGenerator.cs" />
+    <Compile Include="MSIL\DynamicMethodGetHashCodeGenerator.cs" />
+    <Compile Include="MSIL\GetHashCodeIlGenerator.cs" />
     <Compile Include="Helpers\Extensions\ExpressionExtensions.cs" />
     <Compile Include="Helpers\Extensions\FieldInfoExtensions.cs" />
     <Compile Include="Helpers\Extensions\TypeExtensions.cs" />
     <Compile Include="Helpers\RandomProvider.cs" />
+    <Compile Include="MSIL\MsilDisassembler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

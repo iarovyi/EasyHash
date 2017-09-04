@@ -50,6 +50,7 @@
     <Compile Include="HashedManually.cs" />
     <Compile Include="HashedWithComplexEasyHashRegistration.cs" />
     <Compile Include="HashedWithEasyHash.cs" />
+    <Compile Include="HashedWithExpressionTrees.cs" />
     <Compile Include="HashedWithReflection.cs" />
     <Compile Include="Helpers\ConsoleHelper.cs" />
     <Compile Include="Helpers\ReflectionHasher.cs" />

@@ -1,4 +1,6 @@
-﻿namespace EasyHash.Benchmark.Helpers
+﻿using EasyHash.MSIL;
+
+namespace EasyHash.Benchmark.Helpers
 {
     using System.Linq;
     using System.Reflection;
@@ -22,6 +24,6 @@
             }
         }
 
-        public static bool Equals(T obj, T other) => EasyHash<T>.Equals(obj, other);
+        public static bool Equals(T obj, T other) => FastEasyHash<T>.Equals(obj, other);
     }
 }

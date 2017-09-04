@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -72,10 +73,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DynamicMethodGetHashCodeGeneratorSpecs.cs" />
     <Compile Include="EasyHashSpecs.cs" />
     <Compile Include="GetHashCodeExpressionBuilderSpecs.cs" />
     <Compile Include="Helpers\Extensions\NumericAssertationsExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Targets\Dummy.cs" />
     <Compile Include="Targets\Foo.cs" />
   </ItemGroup>
   <ItemGroup>

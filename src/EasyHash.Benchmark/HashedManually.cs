@@ -16,8 +16,7 @@
         {
             unchecked
             {
-                int hash = (int)2166136261;
-                hash = (hash * 16777619) ^ (Number == 0 ? 0 : Number.GetHashCode());
+                var hash = Number;
                 hash = (hash * 16777619) ^ (Text == null ? 0 : Text.GetHashCode());
                 return hash;
             }

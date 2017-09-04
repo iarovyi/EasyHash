@@ -1,4 +1,6 @@
-﻿namespace EasyHash.Benchmark
+﻿using EasyHash.MSIL;
+
+namespace EasyHash.Benchmark
 {
     internal sealed class HashedWithEasyHash
     {

@@ -1,4 +1,6 @@
-﻿namespace EasyHash.Benchmark
+﻿using EasyHash.MSIL;
+
+namespace EasyHash.Benchmark
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -13,7 +15,7 @@
 
         static HashedWithComplexEasyHashRegistration()
         {
-            EasyHash<HashedWithComplexEasyHashRegistration>
+            FastEasyHash<HashedWithComplexEasyHashRegistration>
                 .Register(r => r
                     .WithPrimes(17, 23)
                     .Skip(f => f.Number)
@@ -22,7 +24,7 @@
                     .ExcludeCollectionItems());
         }
 
-        public override int GetHashCode() => EasyHash<HashedWithComplexEasyHashRegistration>.GetHashCode(this);
-        public override bool Equals(object obj) => EasyHash<HashedWithComplexEasyHashRegistration>.Equals(this, obj);
+        public override int GetHashCode() => FastEasyHash<HashedWithComplexEasyHashRegistration>.GetHashCode(this);
+        public override bool Equals(object obj) => FastEasyHash<HashedWithComplexEasyHashRegistration>.Equals(this, obj);
     }
 }

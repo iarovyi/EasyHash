@@ -6,6 +6,7 @@
     using Targets;
     using Xunit;
     using Moq;
+    using Expressions;
 
     public sealed class GetHashCodeExpressionBuilderSpecs
     {
@@ -15,8 +16,8 @@
             checked
             {
                 var foo = new Foo() {Number = int.MaxValue, Text = "some text"};
-                Func<Foo,int> hashFn = new GetHashCodeExpressionBuilder<Foo>()
-                    .WithPrimes(int.MaxValue, int.MaxValue)
+                var configuration = new GetHashCodeConfiguration<Foo>().WithPrimes(int.MaxValue, int.MaxValue);
+                Func<Foo,int> hashFn = new GetHashCodeExpressionBuilder<Foo>(configuration)
                     .Build()
                     .Compile();
 
@@ -29,8 +30,8 @@
         public void Should_not_take_member_into_account_if_it_is_registered_as_skipped()
         {
             var foo = new Foo();
-            Func<Foo, int> skippedFn = new GetHashCodeExpressionBuilder<Foo>()
-                .Skip(f => f.Number)
+            var configuration = new GetHashCodeConfiguration<Foo>().Skip(f => f.Number);
+            Func<Foo, int> skippedFn = new GetHashCodeExpressionBuilder<Foo>(configuration)
                 .Build()
                 .Compile();
 
@@ -43,8 +44,8 @@
         public void Should_use_provided_primes()
         {
             var foo = new Foo();
-            Func<Foo, int> primesFn = new GetHashCodeExpressionBuilder<Foo>()
-                .WithPrimes(31,41)
+            var configuration = new GetHashCodeConfiguration<Foo>().WithPrimes(31, 41);
+            Func<Foo, int> primesFn = new GetHashCodeExpressionBuilder<Foo>(configuration)
                 .Build()
                 .Compile();
 
@@ -57,8 +58,8 @@
         public void Should_use_member_hashing_function()
         {
             var foo = new Foo();
-            Func<Foo, int> customFn = new GetHashCodeExpressionBuilder<Foo>()
-                .For(f => f.Number, (h, i) => 777)
+            var configuration = new GetHashCodeConfiguration<Foo>().For(f => f.Number, (h, i) => 777);
+            Func<Foo, int> customFn = new GetHashCodeExpressionBuilder<Foo>(configuration)
                 .Build()
                 .Compile();
 
@@ -84,8 +85,8 @@
         {
             var item = new Mock<Foo>();
             var foo = new Foo() { Foos = new[] { item.Object, item.Object } };
-            Func<Foo, int> hashFn = new GetHashCodeExpressionBuilder<Foo>()
-                .ExcludeCollectionItems()
+            var configuration = new GetHashCodeConfiguration<Foo>().ExcludeCollectionItems();
+            Func<Foo, int> hashFn = new GetHashCodeExpressionBuilder<Foo>(configuration)
                 .Build()
                 .Compile();
 

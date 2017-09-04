@@ -1,17 +1,16 @@
-﻿namespace EasyHash
+﻿namespace EasyHash.MSIL
 {
     using System;
     using System.Threading;
-    using Expressions;
     using JetBrains.Annotations;
 
-    public static class EasyHash<T>
+    internal static class FastEasyHash<T>
     {
         private static Func<T, int> defaultHasher;
         private static Func<T, int> hasher;
         private static Exception initializationException;
 
-        static EasyHash()
+        static FastEasyHash()
         {
             Reset();
         }
@@ -20,7 +19,7 @@
         {
             try
             {
-                hasher = defaultHasher = new GetHashCodeExpressionBuilder<T>().Build().Compile();
+                hasher = defaultHasher = new DynamicMethodGetHashCodeGenerator<T>().Build();
                 initializationException = null;
             }
             catch (Exception e)
@@ -35,7 +34,7 @@
             {
                 var configuration = new GetHashCodeConfiguration<T>();
                 configure(configuration);
-                Func<T, int> hashFn = new GetHashCodeExpressionBuilder<T>(configuration).Build().Compile();
+                Func<T, int> hashFn = new DynamicMethodGetHashCodeGenerator<T>(configuration).Build();
 
                 if (Interlocked.CompareExchange(ref hasher, hashFn, defaultHasher) != defaultHasher)
                 {

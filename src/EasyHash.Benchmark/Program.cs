@@ -22,7 +22,10 @@
                 WriteLine($"1) Hashing with regular implementation: {manualMs}");
 
                 long easyHashMs = Benchmark(New<HashedWithEasyHash>());
-                WriteLine($"2) Hashing with EasyHash: {easyHashMs}");
+                WriteLine($"2) Hashing with EasyHash (Expression trees): {easyHashMs}");
+
+                long ilEmitMs = Benchmark(New<HashedWithILEmit>());
+                WriteLine($"2) Hashing with IL Emit: {ilEmitMs}");
 
                 long reflectionMs = Benchmark(New<HashedWithReflection>());
                 WriteLine($"3) Hashing with cached reflection: {reflectionMs}");
