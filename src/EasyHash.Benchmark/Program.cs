@@ -69,6 +69,8 @@
             //Force thread to be executed on core #1 as result preventing thread to jump between cores.
             Process.GetCurrentProcess().ProcessorAffinity = new IntPtr(1);
             GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
         }
     }
 }
