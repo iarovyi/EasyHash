@@ -27,7 +27,7 @@
         public static MethodBuildResult<TSignatureDelegate> Build(Action<ILGenerator> generateBody)
         {
             Type[] genericParams = typeof(TSignatureDelegate).GetGenericArguments();
-            bool hasReturn = typeof(TSignatureDelegate).GetGenericTypeDefinition() == typeof(Func<>);
+            bool hasReturn = typeof(TSignatureDelegate).GetGenericTypeDefinition().Name.StartsWith("Func`");
             Type returnType = hasReturn ? genericParams.Last() : null;
             Type[] parameterTypes = hasReturn && genericParams.Length > 1 ? genericParams.Take(genericParams.Length - 1).ToArray()
                 : genericParams;

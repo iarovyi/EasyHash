@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MSIL\EasyHashUsingDynamicAssembly.cs" />
     <Compile Include="MSIL\FastEasyHash.cs" />
     <Compile Include="EasyHash.cs" />
     <Compile Include="Expressions\GetHashCodeExpressionBuilder.cs" />

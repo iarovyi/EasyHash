@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EasyHash.Benchmark</RootNamespace>
     <AssemblyName>EasyHash.Benchmark</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -47,10 +48,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GetHashCodeBenchmark.cs" />
+    <Compile Include="GetHashCodeCustomBenchmark.cs" />
     <Compile Include="HashedManually.cs" />
     <Compile Include="HashedWithComplexEasyHashRegistration.cs" />
     <Compile Include="HashedWithEasyHash.cs" />
-    <Compile Include="HashedWithExpressionTrees.cs" />
+    <Compile Include="HashedWithILEmit.cs" />
+    <Compile Include="HashedWithILEmitAsPartOfDynamicAssembly.cs" />
     <Compile Include="HashedWithReflection.cs" />
     <Compile Include="Helpers\ConsoleHelper.cs" />
     <Compile Include="Helpers\ReflectionHasher.cs" />
@@ -66,6 +70,10 @@
       <Project>{a714842b-47e5-417e-b0fc-ac512a30c101}</Project>
       <Name>EasyHash</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
