@@ -2,17 +2,36 @@
 {
     using System;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Reflection.Emit;
 
     internal class DynamicAssemblyGetHashCodeGenerator<T>
     {
+        internal Func<T, int> Build(GetHashCodeConfiguration<T> configuration = null) =>
+            DynamicAssemblyMethodGenerator<Func<T, int>>
+            .Build((ilGen) => new GetHashCodeIlGenerator<T>(configuration).Generate(ilGen))
+            .Method;
+
+        internal string BuildMsil(GetHashCodeConfiguration<T> configuration = null) =>
+            DynamicAssemblyMethodGenerator<Func<T, int>>
+            .Build((ilGen) => new GetHashCodeIlGenerator<T>(configuration).Generate(ilGen))
+            .IlCode;
+    }
+
+    internal class DynamicAssemblyMethodGenerator<TSignatureDelegate> where TSignatureDelegate : class
+    {
         private const string Type = "DynamicType";
         private const string Method = "DynamicGetHashCode";
-        public string IlCode { get; private set; }
 
-        internal Func<T, int> Build(GetHashCodeConfiguration<T> configuration = null)
+        public static MethodBuildResult<TSignatureDelegate> Build(Action<ILGenerator> generateBody)
         {
+            Type[] genericParams = typeof(TSignatureDelegate).GetGenericArguments();
+            bool hasReturn = typeof(TSignatureDelegate).GetGenericTypeDefinition() == typeof(Func<>);
+            Type returnType = hasReturn ? genericParams.Last() : null;
+            Type[] parameterTypes = hasReturn && genericParams.Length > 1 ? genericParams.Take(genericParams.Length - 1).ToArray()
+                : genericParams;
+
             string directory = Directory.GetCurrentDirectory();
             AppDomain domain = AppDomain.CurrentDomain;
             AssemblyName aname = new AssemblyName(Guid.NewGuid().ToString());
@@ -24,26 +43,19 @@
             MethodBuilder mb = tb.DefineMethod(Method,
                 MethodAttributes.Static | MethodAttributes.Public,
                 CallingConventions.Standard,
-                typeof(int),
-                new[] { typeof(T) });
+                returnType,
+                parameterTypes);
 
-            ILGenerator ilGen = mb.GetILGenerator();
-            new GetHashCodeIlGenerator<T>(configuration).Generate(ilGen);
+            generateBody(mb.GetILGenerator());
 
             Type realType = tb.CreateType();
             var meth = realType.GetMethod(Method);
-            IlCode = GetILCodeOrError(assemBuilder, moduleFileName, directory);
-
-            return (Func<T, int>)Delegate.CreateDelegate(typeof(Func<T, int>), meth);
+            string ilCode = GetIlCodeOrError(assemBuilder, moduleFileName, directory);
+            var method = Delegate.CreateDelegate(typeof(TSignatureDelegate), meth) as TSignatureDelegate;
+            return new MethodBuildResult<TSignatureDelegate>(method, ilCode);
         }
 
-        internal string BuildMsil(GetHashCodeConfiguration<T> configuration = null)
-        {
-            Build(configuration);
-            return IlCode;
-        }
-
-        private string GetILCodeOrError(AssemblyBuilder builder, string moduleFileName, string directory)
+        private static string GetIlCodeOrError(AssemblyBuilder builder, string moduleFileName, string directory)
         {
             try
             {
@@ -66,6 +78,18 @@
             catch (Exception e)
             {
                 return e.ToString();
+            }
+        }
+
+        public class MethodBuildResult<TDelegate>
+        {
+            public readonly TDelegate Method;
+            public readonly string IlCode;
+
+            public MethodBuildResult(TDelegate method, string ilCode)
+            {
+                Method = method;
+                IlCode = ilCode;
             }
         }
     }
