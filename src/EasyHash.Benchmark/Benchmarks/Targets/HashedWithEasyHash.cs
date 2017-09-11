@@ -1,6 +1,4 @@
-﻿using EasyHash.MSIL;
-
-namespace EasyHash.Benchmark
+﻿namespace EasyHash.Benchmark.Benchmarks.Targets
 {
     internal sealed class HashedWithEasyHash
     {

@@ -1,8 +1,9 @@
-﻿namespace EasyHash.Benchmark
+﻿namespace EasyHash.Benchmark.Benchmarks
 {
     /*using BenchmarkDotNet.Attributes;
     using BenchmarkDotNet.Running;
     using FizzWare.NBuilder;
+    using Targets;
 
     public class GetHashCodeBenchmark
     {

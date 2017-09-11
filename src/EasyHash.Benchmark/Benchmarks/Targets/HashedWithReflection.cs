@@ -1,4 +1,4 @@
-﻿namespace EasyHash.Benchmark
+﻿namespace EasyHash.Benchmark.Benchmarks.Targets
 {
     using Helpers;
 

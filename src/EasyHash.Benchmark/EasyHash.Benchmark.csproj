@@ -48,14 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GetHashCodeBenchmark.cs" />
-    <Compile Include="GetHashCodeCustomBenchmark.cs" />
-    <Compile Include="HashedManually.cs" />
-    <Compile Include="HashedWithComplexEasyHashRegistration.cs" />
-    <Compile Include="HashedWithEasyHash.cs" />
-    <Compile Include="HashedWithILEmit.cs" />
-    <Compile Include="HashedWithILEmitAsPartOfDynamicAssembly.cs" />
-    <Compile Include="HashedWithReflection.cs" />
+    <Compile Include="Benchmarks\GetHashCodeBenchmark.cs" />
+    <Compile Include="Benchmarks\GetHashCodeCustomBenchmark.cs" />
+    <Compile Include="Benchmarks\Targets\HashedManually.cs" />
+    <Compile Include="Benchmarks\Targets\HashedWithComplexEasyHashRegistration.cs" />
+    <Compile Include="Benchmarks\Targets\HashedWithEasyHash.cs" />
+    <Compile Include="Benchmarks\Targets\HashedWithILEmit.cs" />
+    <Compile Include="Benchmarks\Targets\HashedWithILEmitAsPartOfDynamicAssembly.cs" />
+    <Compile Include="Benchmarks\Targets\HashedWithReflection.cs" />
     <Compile Include="Helpers\ConsoleHelper.cs" />
     <Compile Include="Helpers\ReflectionHasher.cs" />
     <Compile Include="Program.cs" />

@@ -1,11 +1,11 @@
-﻿namespace EasyHash.Benchmark
+﻿namespace EasyHash.Benchmark.Benchmarks
 {
     using System;
     using System.Diagnostics;
     using System.Threading;
+    using Helpers;
     using FizzWare.NBuilder;
-    using static System.Console;
-    using static Helpers.ConsoleHelper;
+    using Targets;
 
     internal class GetHashCodeCustomBenchmark
     {
@@ -13,25 +13,25 @@
 
         public static void Run()
         {
-            WriteLine($"Benchmark started", ConsoleColor.Green);
-            WriteLine($"Each hashing implementation will be executed {Times} times", ConsoleColor.Green);
+            ConsoleHelper.WriteLine($"Benchmark started", ConsoleColor.Green);
+            ConsoleHelper.WriteLine($"Each hashing implementation will be executed {Times} times", ConsoleColor.Green);
 
             long manualMs = Benchmark(New<HashedManually>());
-            WriteLine($"1) Hashing with regular implementation: {manualMs}");
+            Console.WriteLine($"1) Hashing with regular implementation: {manualMs}");
 
             long easyHashMs = Benchmark(New<HashedWithEasyHash>());
-            WriteLine($"2) Hashing with EasyHash (Expression trees): {easyHashMs}");
+            Console.WriteLine($"2) Hashing with EasyHash (Expression trees): {easyHashMs}");
 
             long ilEmitMs = Benchmark(New<HashedWithILEmit>());
-            WriteLine($"3) Hashing with IL Emit: {ilEmitMs}");
+            Console.WriteLine($"3) Hashing with IL Emit: {ilEmitMs}");
 
             long ilEmitAsDynamicAssemblyMs = Benchmark(New<HashedWithILEmitAsPartOfDynamicAssembly>());
-            WriteLine($"4) Hashing with IL Emit as part of dynamic assembly: {ilEmitAsDynamicAssemblyMs}");
+            Console.WriteLine($"4) Hashing with IL Emit as part of dynamic assembly: {ilEmitAsDynamicAssemblyMs}");
 
             long reflectionMs = Benchmark(New<HashedWithReflection>());
-            WriteLine($"5) Hashing with cached reflection: {reflectionMs}");
+            Console.WriteLine($"5) Hashing with cached reflection: {reflectionMs}");
 
-            WriteLine($"Benchmark Finished", ConsoleColor.Green);
+            ConsoleHelper.WriteLine($"Benchmark Finished", ConsoleColor.Green);
         }
 
         private static T New<T>() => Builder<T>.CreateNew().Build();

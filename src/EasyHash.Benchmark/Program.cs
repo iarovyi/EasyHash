@@ -3,6 +3,7 @@
     using System;
     using static System.Console;
     using static Helpers.ConsoleHelper;
+    using Benchmarks;
 
     class Program
     {

@@ -1,9 +1,8 @@
-﻿using EasyHash.MSIL;
-
-namespace EasyHash.Benchmark
+﻿namespace EasyHash.Benchmark.Benchmarks.Targets
 {
     using System.Collections.Generic;
     using System.Linq;
+    using MSIL;
 
     internal sealed class HashedWithComplexEasyHashRegistration
     {
